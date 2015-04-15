@@ -1,0 +1,24 @@
+{
+  "name": "movie-app",
+  "version": "1.0.0",
+  "description": "基于node+mongodb",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LiangCY/movie-app.git"
+  },
+  "author": "lcy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LiangCY/movie-app/issues"
+  },
+  "homepage": "https://github.com/LiangCY/movie-app",
+  "dependencies": {
+    "express": "^4.12.3",
+    "jade": "^1.9.2",
+    "mongoose": "^4.0.1"
+  }
+}
