@@ -3,6 +3,7 @@ block content
     .container
         .row
             form.form-horizontal(method="post",action="/admin/movie/new")
+                input(type="hidden",name="movie[_id]",value="#{movie._id}")
                 .form-group
                     label.col-sm-2.control-label(for="inputTitle") 影片名称
                     .col-sm-10
@@ -14,7 +15,7 @@ block content
                 .form-group
                     label.col-sm-2.control-label(for="inputCountry") 国家
                     .col-sm-10
-                        input#inputCountry.form-control(type="text",name="movie[country]",value="#{movie.director}")
+                        input#inputCountry.form-control(type="text",name="movie[country]",value="#{movie.country}")
                 .form-group
                     label.col-sm-2.control-label(for="inputLanguage") 语言
                     .col-sm-10
