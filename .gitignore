@@ -3,6 +3,4 @@ bower_components
 node_modules
 
 .idea
-/views/layout.html
-/views/pages/*.html
-libs
+/public/libs
