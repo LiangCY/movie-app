@@ -105,6 +105,6 @@ exports.del = function (req, res) {
             } else {
                 res.json({success: 1})
             }
-        })
+        });
     }
 };
