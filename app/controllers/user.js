@@ -17,12 +17,11 @@ exports.showSignin = function (req, res) {
 //signup
 exports.signup = function (req, res) {
     var _user = req.body.user;
-
     User.find({name: _user.name}, function (err, user) {
         if (err) {
             console.log(err);
         }
-        if (user) {
+        if (user.name) {
             return res.redirect('/signin');
         } else {
             var newUser = new User(_user);
