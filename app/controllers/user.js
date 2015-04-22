@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var User = require('../models/user');
 
 //signup page
@@ -17,11 +18,11 @@ exports.showSignin = function (req, res) {
 //signup
 exports.signup = function (req, res) {
     var _user = req.body.user;
-    User.find({name: _user.name}, function (err, user) {
+    User.findOne({name: _user.name}, function (err, user) {
         if (err) {
             console.log(err);
         }
-        if (user.name) {
+        if (user) {
             return res.redirect('/signin');
         } else {
             var newUser = new User(_user);
@@ -69,6 +70,52 @@ exports.logout = function (req, res) {
     res.redirect('/');
 };
 
+//user info
+exports.detail = function (req, res) {
+    var id = req.params.id;
+    User.findById(id, function (err, user) {
+        res.render('userinfo', {
+            title: user.name
+        });
+    });
+};
+
+//edit user
+exports.update = function (req, res) {
+    var id = req.params.id;
+    if (id) {
+        User.findById(id, function (err, user) {
+            res.render('edituser', {
+                title: '资料修改 ' + user.name,
+                user: user
+            });
+        });
+    }
+};
+
+//save user
+exports.save = function (req, res) {
+    var id = req.body.user._id;
+    var userObj = req.body.user;
+    var _user;
+    if (id !== 'undefined') {
+        User.findById(id, function (err, user) {
+            if (err) {
+                console.log(err);
+            }
+            _user = _.extend(user, userObj);
+            _user.save(function (err, user) {
+                if (err) {
+                    console.log(err)
+                }
+                res.redirect('/admin/user/list');
+            });
+        });
+    } else {
+        res.redirect('/admin/user/list');
+    }
+};
+
 //userlist page
 exports.list = function (req, res) {
     User.fetch(function (err, users) {
@@ -80,6 +127,20 @@ exports.list = function (req, res) {
             users: users
         });
     });
+};
+
+//delete
+exports.del = function (req, res) {
+    var id = req.query.id;
+    if (id) {
+        User.remove({_id: id}, function (err, user) {
+            if (err) {
+                console.log(err)
+            } else {
+                res.json({success: 1})
+            }
+        });
+    }
 };
 
 // midware for user
