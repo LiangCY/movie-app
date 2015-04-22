@@ -9,7 +9,6 @@ var mongoStore = require('connect-mongo')(session);
 var port = process.env.PORT || 3000;
 var app = express();
 var dbUrl = 'mongodb://localhost/movie';
-//var dbUrl = "mongodb://lcy:lcy920312@ds041167.mongolab.com:41167/lcym";
 
 mongoose.connect(dbUrl);
 

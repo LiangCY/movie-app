@@ -1,0 +1,17 @@
+extends ../layout
+block content
+    .container
+        .row
+            form.form-horizontal(method="post",action="/admin/user")
+                input(type="hidden",name="user[_id]",value="#{user._id}")
+                .form-group
+                    label.col-sm-2.control-label(for="inputPassword") 密码
+                    .col-sm-10
+                        input#inputPassword.form-control(type="text",name="user[password]")
+                .form-group
+                    label.col-sm-2.control-label(for="inputRole") 管理级别
+                    .col-sm-10
+                        input#inputRole.form-control(type="text",name="user[role]",value="#{user.role}")
+                .form-group
+                    .col-sm-offset-2.col-sm-10
+                        button.btn.btn-default(type="submit") 保存

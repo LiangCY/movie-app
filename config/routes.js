@@ -1,6 +1,7 @@
 var Index = require('../app/controllers/index');
 var Movie = require('../app/controllers/movie');
 var User = require('../app/controllers/user');
+var Comment = require('../app/controllers/comment');
 
 module.exports = function (app) {
     //pre handle user
@@ -26,5 +27,12 @@ module.exports = function (app) {
     app.get('/signin', User.showSignin);
     app.get('/signup', User.showSignup);
     app.get('/logout', User.logout);
+    app.get('/user/:id', User.detail);
+    app.post('/admin/user', User.signinRequired, User.adminRequired, User.save);
+    app.get('/admin/user/update/:id', User.signinRequired, User.adminRequired, User.update);
     app.get('/admin/user/list', User.signinRequired, User.adminRequired, User.list);
+    app.delete('/admin/user/list', User.signinRequired, User.adminRequired, User.del);
+
+    //comment
+    app.post('/user/comment',User.signinRequired,Comment.save);
 };
