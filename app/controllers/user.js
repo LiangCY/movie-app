@@ -85,10 +85,16 @@ exports.update = function (req, res) {
     var id = req.params.id;
     if (id) {
         User.findById(id, function (err, user) {
-            res.render('edituser', {
-                title: '资料修改 ' + user.name,
-                user: user
-            });
+            if (user) {
+                res.render('user_admin', {
+                    title: '资料修改 ' + user.name,
+                    user: user
+                });
+            } else {
+                res.render('error', {
+                    message: '用户不存在'
+                });
+            }
         });
     }
 };
@@ -98,7 +104,7 @@ exports.save = function (req, res) {
     var id = req.body.user._id;
     var userObj = req.body.user;
     var _user;
-    if (id !== 'undefined') {
+    if (id !== undefined) {
         User.findById(id, function (err, user) {
             if (err) {
                 console.log(err);
@@ -154,7 +160,6 @@ exports.signinRequired = function (req, res, next) {
 
 exports.adminRequired = function (req, res, next) {
     var user = req.session.user;
-    console.log(user);
     if (user.role <= 10) {
         return res.redirect('/signin');
     }

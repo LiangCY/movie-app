@@ -1,49 +1,50 @@
 var _ = require('underscore');
 var Movie = require('../models/movie');
 var Comment = require('../models/comment');
+var Category = require('../models/category');
 
-//detail
+//movie detail
 exports.detail = function (req, res) {
     var id = req.params.id;
-    Movie.findById(id, function (err, movie) {
-        Comment.find({movie: id})
-            .populate('from', 'name')
-            .populate('reply.from reply.to','name')
-            .exec(function (err, comments) {
-                res.render('detail', {
-                    title: '影片详情 ' + movie.title,
-                    movie: movie,
-                    comments: comments
+    Movie.findOne({_id: id})
+        .populate('category', 'name')
+        .exec(function (err, movie) {
+            Comment.find({movie: id})
+                .populate('from', 'name')
+                .populate('reply.from reply.to', 'name')
+                .exec(function (err, comments) {
+                    res.render('detail', {
+                        title: '影片详情 ' + movie.title,
+                        movie: movie,
+                        comments: comments
+                    });
                 });
-            });
-    });
+        });
 };
 
-//admin new
+//new movie
 exports.new = function (req, res) {
-    res.render('admin', {
-        title: '后台管理',
-        movie: {
-            title: '',
-            director: '',
-            country: '',
-            year: '',
-            poster: '',
-            language: '',
-            flash: '',
-            summary: ''
-        }
+    Category.find({}, function (err, categories) {
+        res.render('admin', {
+            title: '后台管理',
+            categories: categories,
+            movie: {}
+        });
     });
+
 };
 
-//admin update
+//update movie
 exports.update = function (req, res) {
     var id = req.params.id;
     if (id) {
         Movie.findById(id, function (err, movie) {
-            res.render('admin', {
-                title: '信息修改',
-                movie: movie
+            Category.find({}, function (err, categorie) {
+                res.render('admin', {
+                    title: '信息修改',
+                    categories: categorie,
+                    movie: movie
+                });
             });
         });
     }
@@ -55,36 +56,54 @@ exports.save = function (req, res) {
     var id = req.body.movie._id;
     var movieObj = req.body.movie;
     var _movie;
-
-    if (id !== 'undefined') {
+    if (id) {
         Movie.findById(id, function (err, movie) {
             if (err) {
                 console.log(err);
             }
+            Category.findById(movie.category, function (err, category) {
+                if (err) {
+                    console.log(err);
+                }
+                var i = 0, index;
+                for (; i < category.movies.length; i++) {
+                    if (category.movies[i].toString() == movie._id.toString()) {
+                        index = i;
+                        break;
+                    }
+                }
+                category.movies.splice(index, 1);
+                category.save(function (err, category) {
+                    if (err) {
+                        console.log(err)
+                    }
+                });
+            });
             _movie = _.extend(movie, movieObj);
             _movie.save(function (err, movie) {
-                if (err) {
-                    console.log(err)
-                }
-                res.redirect('/movie/' + movie._id);
+                Category.findById(movie.category, function (err, category) {
+                    if (err) {
+                        console.log(err)
+                    }
+                    category.movies.push(movie._id);
+                    category.save(function (err, category) {
+                        res.redirect('/movie/' + movie._id);
+                    });
+                });
             });
         });
     } else {
-        _movie = new Movie({
-            title: movieObj.title,
-            director: movieObj.director,
-            country: movieObj.country,
-            year: movieObj.year,
-            poster: movieObj.poster,
-            language: movieObj.language,
-            flash: movieObj.flash,
-            summary: movieObj.summary
-        });
+        _movie = new Movie(movieObj);
         _movie.save(function (err, movie) {
-            if (err) {
-                console.log(err)
-            }
-            res.redirect('/movie/' + movie._id);
+            Category.findById(movie.category, function (err, category) {
+                if (err) {
+                    console.log(err)
+                }
+                category.movies.push(movie._id);
+                category.save(function (err, category) {
+                    res.redirect('/movie/' + movie._id);
+                });
+            });
         });
     }
 };

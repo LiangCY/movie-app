@@ -2,6 +2,7 @@ var Index = require('../app/controllers/index');
 var Movie = require('../app/controllers/movie');
 var User = require('../app/controllers/user');
 var Comment = require('../app/controllers/comment');
+var Category = require('../app/controllers/category');
 
 module.exports = function (app) {
     //pre handle user
@@ -34,5 +35,15 @@ module.exports = function (app) {
     app.delete('/admin/user/list', User.signinRequired, User.adminRequired, User.del);
 
     //comment
-    app.post('/user/comment',User.signinRequired,Comment.save);
+    app.post('/user/comment', User.signinRequired, Comment.save);
+
+    //category
+    app.get('/admin/category/new', User.signinRequired, User.adminRequired, Category.new);
+    app.get('/admin/category/update/:id', User.signinRequired, User.adminRequired, Category.update);
+    app.post('/admin/category', User.signinRequired, User.adminRequired, Category.save);
+    app.get('/admin/category/list', User.signinRequired, User.adminRequired, Category.list);
+    app.delete('/admin/category/list', User.signinRequired, User.adminRequired, Category.del);
+
+    //results
+    app.get('/results', Index.search);
 };

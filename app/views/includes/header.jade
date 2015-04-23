@@ -1,7 +1,12 @@
 .container
     .row
-        .page-header
+        .page-header.clearfix
             h1= title
+            form(method='GET' action='/results?p=1')
+                .input-group.col-md-3.pull-right
+                    input.form-control(type='text',name='q')
+                    span.input-group-btn
+                        button.btn.btn-primary(type='submit') 搜索
 .navbar.navbar-default.navbar-fixed-bottom
     .container
         .navbar-header
