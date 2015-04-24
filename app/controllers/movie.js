@@ -78,7 +78,7 @@ exports.save = function (req, res) {
                     }
                 }
                 category.movies.splice(index, 1);
-                category.save(function (err, category) {
+                category.save(function (err) {
                     if (err) {
                         console.log(err)
                     }
@@ -90,8 +90,11 @@ exports.save = function (req, res) {
                     if (err) {
                         console.log(err)
                     }
-                    category.movies.push(movie._id);
-                    category.save(function (err, category) {
+                    category.movies.unshift(movie._id);
+                    category.save(function (err) {
+                        if(err){
+                            console.log(err);
+                        }
                         res.redirect('/movie/' + movie._id);
                     });
                 });
@@ -104,8 +107,11 @@ exports.save = function (req, res) {
                 if (err) {
                     console.log(err)
                 }
-                category.movies.push(movie._id);
-                category.save(function (err, category) {
+                category.movies.unshift(movie._id);
+                category.save(function (err) {
+                    if (err) {
+                        console.log(err)
+                    }
                     res.redirect('/movie/' + movie._id);
                 });
             });
@@ -130,7 +136,7 @@ exports.list = function (req, res) {
 exports.del = function (req, res) {
     var id = req.query.id;
     if (id) {
-        Movie.remove({_id: id}, function (err, movie) {
+        Movie.remove({_id: id}, function (err) {
             if (err) {
                 console.log(err)
             } else {
@@ -144,7 +150,7 @@ exports.del = function (req, res) {
 exports.savePoster = function (req, res, next) {
     var posterFile = req.files.uploadPoster;
 
-    if (posterFile.name) {
+    if (posterFile) {
         req.poster = posterFile.name;
         next();
     } else {
