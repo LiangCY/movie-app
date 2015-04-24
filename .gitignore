@@ -1,6 +1,5 @@
 bower_components
-
 node_modules
-
 .idea
 /public/libs
+/public/upload
