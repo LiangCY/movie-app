@@ -33,7 +33,7 @@ if ('development' === app.get('env')) {
     app.set('showStatckError', true);
     app.use(morgan(':method :url :status'));
     app.locals.pretty = true;
-    mongoose.set('debug', true);
+    //mongoose.set('debug', true);
 }
 
 require('./config/routes')(app);
