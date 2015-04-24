@@ -1,3 +1,5 @@
+var fs = require('fs');
+var path = require('path');
 var _ = require('underscore');
 var Movie = require('../models/movie');
 var Comment = require('../models/comment');
@@ -56,6 +58,9 @@ exports.save = function (req, res) {
     var id = req.body.movie._id;
     var movieObj = req.body.movie;
     var _movie;
+    if (req.poster) {
+        movieObj.poster = req.poster;
+    }
     if (id) {
         Movie.findById(id, function (err, movie) {
             if (err) {
@@ -132,5 +137,17 @@ exports.del = function (req, res) {
                 res.json({success: 1})
             }
         });
+    }
+};
+
+//poster middleware
+exports.savePoster = function (req, res, next) {
+    var posterFile = req.files.uploadPoster;
+
+    if (posterFile.name) {
+        req.poster = posterFile.name;
+        next();
+    } else {
+        next();
     }
 };

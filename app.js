@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var multer = require('multer');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var morgan = require('morgan');
@@ -15,6 +16,7 @@ mongoose.connect(dbUrl);
 app.set('views', './app/views/pages');
 app.set('view engine', 'jade');
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(multer({dest: './public/upload/'}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
