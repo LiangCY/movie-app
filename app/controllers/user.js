@@ -149,7 +149,7 @@ exports.del = function (req, res) {
     }
 };
 
-// midware for user
+// middleware for user
 exports.signinRequired = function (req, res, next) {
     var user = req.session.user;
     if (!user) {
